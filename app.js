@@ -6,7 +6,7 @@ const fs = require('fs');
 const baseUrl = 'https://novelfull.com';
 
 // Define the first chapter 
-const url = 'https://novelfull.com/everyone-else-is-a-returnee/prologue-part-1.html';
+const url = 'https://novelfull.com/astral-pet-store/chapter-1.html';
 
 let TotalChap = 0;
 let content;
@@ -23,7 +23,7 @@ function crawlPage(url) {
 
 		// Select Chapter title
 		const ChapterTitle = $('.chapter-text').text() + '\n'; 
-		content = content + ChapterTitle;
+		content = '# ' + content + ChapterTitle;
 
 		// Select all p elements
 		const paragraphs = $('#chapter-content p');
@@ -60,6 +60,7 @@ function crawlPage(url) {
       	}
     } else {
     	console.log(error);
+    	console.log(url);
     }
   });
 }

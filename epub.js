@@ -17,7 +17,7 @@ let rl = readline.createInterface({
 // Read Line by line
 rl.on('line', (line) => {
   // Check the title of the chapter 
-  if (line.startsWith('Chapter ') || line.startsWith('Prologue ') || line.startsWith('Extra Chapter ')) {
+  if (line.startsWith('# ')) {
     // Set data to empty string
     data = "";
 
@@ -43,9 +43,9 @@ rl.on('line', (line) => {
 rl.on('close', () => {
   // Create Meta data for Epub
   const options = {
-    title: 'EVERYONE ELSE IS A RETURNEE',
-    author: 'Toika, Toy Car, 토이카',
-    output: './Everyone else is a Returnee 348 (End) .epub',
+    title: 'ASTRAL PET STORE',
+    author: 'Ancient Xi, Gu Xi, 古羲',
+    output: './Astral Pet Store 1581 (End).epub',
     content : content
   }; 
 
