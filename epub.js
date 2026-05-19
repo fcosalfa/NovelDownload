@@ -1,59 +1,51 @@
-const epub = require('epub-gen');
-const fs = require('fs');
-const readline = require('readline');
+import { default as epub } from 'epub-gen-memory';
+import fs from 'node:fs';
+import readline from 'node:readline';
 
 const content = [];
 let data;
-let ChapterCount = 0;
+let chapterCount = 0;
 
-// Read strem data from Text file
+// Read stream data from Text file
 let stream = fs.createReadStream('new-file.txt');
 
-// Start stream 
 let rl = readline.createInterface({
   input: stream
 });
 
-// Read Line by line
 rl.on('line', (line) => {
-  // Check the title of the chapter 
   if (line.startsWith('# ')) {
-    // Set data to empty string
     data = "";
-
-    // Construct a new object for this chapter
     content.push({
-      title : line,
-      data : data
+      title: line.replace('# ', ''), 
+      content: data // Changed from 'data' to 'content'
     });
- 
-    // Chapter counter
-    ChapterCount = ChapterCount + 1;
-
-  } else {
-    // Add p element to this line
+    chapterCount++;
+  } else if (chapterCount > 0) {
     data = data + '<p>' + line + '</p>';
-
-    // Join the text in this chapter
-    content[ChapterCount - 1].data = data;
+    // Update the reference here as well
+    content[chapterCount - 1].content = data; 
   }
 });
 
-// End of reading
 rl.on('close', () => {
-  // Create Meta data for Epub
   const options = {
-    title: 'ASTRAL PET STORE',
-    author: 'Ancient Xi, Gu Xi, 古羲',
-    output: './Astral Pet Store 1581 (End).epub',
-    content : content
+    title: 'The Clan Master Cant possibly Be A Mortal',
+    author: 'N/A'
   }; 
 
-  // Generate Epub file
-  new epub(options).promise.then(() => console.log('Done'));
+  const outputPath = './The Clan Master Cant possibly Be A Mortal - 2204 (End).epub';
 
-  // Shutdown NodeJS
-  // process.exit(0);
+  // Use epub.default if epub is an object, otherwise use epub directly
+  const epubGenerator = typeof epub === 'function' ? epub : epub.default;
+
+  epubGenerator(options, content)
+    .then((buffer) => {
+      fs.writeFileSync(outputPath, buffer);
+      console.log('Done!');
+    })
+    .catch((err) => {
+      console.error('Error:', err);
+    });
 });
-
 
